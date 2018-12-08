@@ -47,8 +47,10 @@ defmodule Mix.Tasks.Eight do
 
   defp sum_metadata(nil), do: 0
   defp sum_metadata(n) do
-    child_count = n.children |> Enum.map(fn child -> sum_metadata(child) end) |> Enum.sum()
-    child_count + Enum.sum(n.metadata)
+    n.children
+    |> Enum.map(fn child -> sum_metadata(child) end)
+    |> Enum.sum()
+    |> Kernel.+(n.metadata |> Enum.sum)
   end
 
   defp value_of_node(%Node{children: [], metadata: metadata}), do: Enum.sum(metadata)
