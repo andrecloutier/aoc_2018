@@ -8,7 +8,7 @@ defmodule Mix.Tasks.Nine do
   def run(_args) do
 #    test_part_one()
 
-    # "430 players; last marble is worth 71588 points"
+    # Input was: "430 players; last marble is worth 71588 points"
     [num_players, last_marble_points] = [430, 71588]
     winning_score = winning_score(num_players, last_marble_points)
     IO.puts("Part 1 answer: #{winning_score}")
@@ -52,12 +52,11 @@ defmodule Mix.Tasks.Nine do
     compute_scores(new_marbles, rem(player_number+1, num_players), current_marble+1, num_players, last_marble_score, score)
   end
 
-#  defp print_marbles(%ListIterator{head: head, current: current, tail: tail} = m) do
+#  defp inspect_marbles(%ListIterator{head: head, current: current, tail: tail} = m) do
 #    [Enum.reverse(head), [current], tail]
 #    |> Enum.concat()
 #    |> Enum.join(" ")
 #    |> IO.puts
-#
 #    m
 #  end
 
@@ -114,7 +113,7 @@ defmodule Mix.Tasks.Nine do
   end
   defp remove_value(%ListIterator{head: head, current: current, tail: []} = it) do
     [next_current | next_tail] = Enum.reverse(head)
-    it2 = %ListIterator{it | head: [], current: next_current, tail: next_tail, head_length: it.head_length, tail_length: 0}
+    it2 = %ListIterator{it | head: [], current: next_current, tail: next_tail, head_length: 0, tail_length: it.head_length}
     {current, it2}
   end
   defp remove_value(%ListIterator{head: head, current: current, tail: [next_current | next_tail]} = it) do
