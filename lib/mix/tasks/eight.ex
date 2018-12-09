@@ -27,7 +27,7 @@ defmodule Mix.Tasks.Eight do
 
     child_data = build_children(num_children, rest2)
 
-    rest3 = (Enum.at(child_data, -1) || [nil, rest2]) |> Enum.at(-1)
+    rest3 = (Enum.at(child_data, -1) || [rest2]) |> Enum.at(-1)
 
     {metadata_values, rest4} = rest3 |> Enum.split(num_metadata)
 
