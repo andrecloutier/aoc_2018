@@ -20,6 +20,33 @@ defmodule Mix.Tasks.Eleven do
     {top_x, top_y, _} = solve_part_one(board)
     IO.puts("Part 1 answer: #{top_x},#{top_y}")
 
+    {max_x, max_y, max_size, _max_score, _prev_board} =
+      Enum.reduce((2..300), {0,0,0,-9999,board}, fn size, {max_x, max_y, max_size, max_score, prev_board} ->
+        IO.puts "Working on size #{size} out of 300..."
+        new_board = calculate_for_size(board, prev_board, size)
+
+        {{maybe_x, maybe_y}, maybe_max_score} = new_board |> Enum.max_by(fn {_, score} -> score end)
+
+        if maybe_max_score > max_score do
+          {maybe_x, maybe_y, size, maybe_max_score, Map.new(new_board)}
+        else
+          {max_x, max_y, max_size, max_score, Map.new(new_board)}
+        end
+      end)
+
+    IO.puts("Part 2 answer: #{max_x},#{max_y},#{max_size}")
+  end
+
+  defp calculate_for_size(board, previous_board, size) do
+    Stream.map((1..(300-size+1)), fn x ->
+      Stream.map((1..(300-size+1)), fn y ->
+        tl = Map.get(previous_board, {x,y})
+        ys = Stream.map(0..(size-2), fn y_offset -> Map.get(board, {x+size-1,y+y_offset}) end) |> Enum.sum
+        xs = Stream.map(0..(size-1), fn x_offset -> Map.get(board, {x+x_offset,y+size-1}) end) |> Enum.sum
+        {{x,y}, tl+ys+xs}
+      end)
+    end)
+    |> Enum.concat()
   end
 
   defp solve_part_one(board) do
@@ -33,7 +60,6 @@ defmodule Mix.Tasks.Eleven do
           end)
         end)
         |> Enum.concat
-
 
       if Enum.any?(grid_values, &is_nil/1) do
         current_best
